@@ -2,9 +2,11 @@ import numpy as np
 import random
 import pickle  # For saving/loading Q-table
 
+
+
 # Initialize game state
 turns = 0
-board = np.zeros((3, 3), dtype=int)
+board = np.zeros((4, 4), dtype=int)
 current_player = 1  # Player 1 starts
 
 def display_board(board):
@@ -22,7 +24,7 @@ def display_board(board):
     print()
 
 def check_legal_move(move) -> bool:
-    if 0 <= move < 3:
+    if 0 <= move < 4:
         return True
     else:
         print("Invalid input. Please enter a number between 0 and 2.")
@@ -37,12 +39,12 @@ def check_if_occupied(row, col, board) -> bool:
 
 def check_win(board):
     # Check horizontal
-    for i in range(3):
+    for i in range(4):
         if board[i][0] == board[i][1] == board[i][2] != 0:
             return True
 
     # Check vertical
-    for j in range(3):
+    for j in range(4):
         if board[0][j] == board[1][j] == board[2][j] != 0:
             return True
 
@@ -113,19 +115,19 @@ class QLearningAgent:
 def train_agent(agent, episodes=50000):
     for episode in range(episodes):
         # Initialize the game
-        board = np.zeros((3, 3), dtype=int)
+        board = np.zeros((4, 4), dtype=int)
         turns = 0
         done = False
         current_player = 1  # Agent starts first
 
         while not done:
             state = tuple(board.flatten())
-            available_actions = [i for i in range(9) if board.flatten()[i] == 0]
+            available_actions = [i for i in range(16) if board.flatten()[i] == 0]
 
             if current_player == 1:
                 # Agent's turn
                 action = agent.choose_action(state, available_actions)
-                row, col = divmod(action, 3)
+                row, col = divmod(action, 4)
                 board[row][col] = current_player
                 turns += 1
 
@@ -133,26 +135,26 @@ def train_agent(agent, episodes=50000):
                     reward = 1  # Agent wins
                     agent.learn(state, action, reward, None, [], True)
                     done = True
-                elif turns == 9:
+                elif turns == 16:
                     reward = 0  # Draw
                     agent.learn(state, action, reward, None, [], True)
                     done = True
                 else:
                     # Opponent's turn next
-                    next_available_actions = [i for i in range(9) if board.flatten()[i] == 0]
+                    next_available_actions = [i for i in range(16) if board.flatten()[i] == 0]
                     agent.learn(state, action, 0, tuple(board.flatten()), next_available_actions, False)
                     current_player = 2
             else:
                 # Opponent's turn (Random)
                 opp_action = random.choice(available_actions)
-                board[opp_action // 3][opp_action % 3] = current_player
+                board[opp_action // 4][opp_action % 4] = current_player
                 turns += 1
 
                 if check_win(board):
                     reward = -1  # Agent loses
                     agent.learn(state, action, reward, None, [], True)
                     done = True
-                elif turns == 9:
+                elif turns == 16:
                     reward = 0  # Draw
                     agent.learn(state, action, reward, None, [], True)
                     done = True
@@ -168,19 +170,19 @@ def train_agent(agent, episodes=50000):
     print("Training completed and Q-table saved.")
 
 def play_against_agent(agent):
-    board = np.zeros((3, 3), dtype=int)
+    board = np.zeros((4, 4), dtype=int)
     turns = 0
     current_player = 1  # Agent starts first
 
     while True:
         display_board(board)
         state = tuple(board.flatten())
-        available_actions = [i for i in range(9) if board.flatten()[i] == 0]
+        available_actions = [i for i in range(16) if board.flatten()[i] == 0]
 
         if current_player == 1:
             # Agent's turn
             action = agent.choose_action(state, available_actions)
-            row, col = divmod(action, 3)
+            row, col = divmod(action, 4)
             board[row][col] = current_player
             turns += 1
 
@@ -197,7 +199,7 @@ def play_against_agent(agent):
         else:
             # Human player's turn
             row, col = get_player_move(current_player)
-            action = row * 3 + col
+            action = row * 4 + col
             if board[row][col] != 0:
                 print("Spot occupied! Choose another move.")
                 continue

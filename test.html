@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1.0">
+      <title>TIC TAC AI</title>
+      
+      <!-- PyScript CSS -->
+      <link rel="stylesheet" href="https://pyscript.net/releases/2024.9.2/core.css">
+      
+      <!-- PyScript JS -->
+      <script type="module" src="https://pyscript.net/releases/2024.9.2/core.js"></script>
+      
+  </head>
+
+
+  <body>
+
+    <h1>Tic-Tac-Toe with Q-Learning Agent</h1>
+
+    <!-- PyScript Configuration -->
+
+
+    <!-- Main Python Script -->
+    <script type="py" terminal worker config='{"packages":["numpy"]}'>
+        import numpy
+        turns = 0
+        board = numpy.zeros((4, 4), dtype=int)
+        current_player = 1  # Player 1 starts
+        
+        def display_board(board):
+            print("\nCurrent board:")
+            for row in board:
+                display_row = []
+                for cell in row:
+                    if cell == 0:
+                        display_row.append(".")
+                    elif cell == 1:
+                        display_row.append("X")
+                    elif cell == 2:
+                        display_row.append("O")
+                print(" ".join(display_row))
+            print()
+
+        display_board(board)
+    </script> <!-- on the worker -->
+        
+  </body>
+</html>
