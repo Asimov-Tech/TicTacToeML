@@ -3,7 +3,6 @@ import random
 import pickle  # For saving/loading Q-table
 
 
-
 # Initialize game state
 turns = 0
 board = np.zeros((4, 4), dtype=int)
@@ -190,7 +189,7 @@ def play_against_agent(agent):
                 display_board(board)
                 print(f"Agent (X) wins!")
                 break
-            elif turns == 9:
+            elif turns == 16:
                 display_board(board)
                 print("It's a draw!")
                 break
